@@ -1,21 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+//import provider to connect component to redux store.
+import {Provider} from 'react-redux';
+//import your store to connect your component.
+import {reportsStore} from './redux/store';
+import {registerRootComponent} from 'expo';
+import {NavContainer} from "./containers/NavContainer";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    return (
+        <Provider store={reportsStore}>
+            <NavContainer />
+        </Provider>
+    );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
