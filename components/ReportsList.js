@@ -25,7 +25,8 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
     );
 
     useEffect( () => {
-        props.onRefreshCurrentPosition();
+        const timeoutId = props.onRefreshCurrentPosition();
+        return () => clearTimeout(timeoutId);
 
     }, [props.onRefreshCurrentPosition] );
 
@@ -45,11 +46,11 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
 
     const mapMarkers = () => {
 
-        if ( props.reports.length === 0 ) {
+        if ( reports.length === 0 ) {
             return;
         }
 
-        return props.reports.map( ( report ) => <Marker
+        return reports.map( ( report ) => <Marker
             key={report.id}
             coordinate={{latitude: parseFloat( report.lat ), longitude: parseFloat( report.lon )}}
             title={report.message}
@@ -63,10 +64,10 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
     let lon = -122.3321;
     let markers = [];
 
-    if ( props.reports.length > 0 ) {
-        const lastItem = props.reports.length - 1;
-        lat = props.reports[ lastItem ].lat;
-        lon = props.reports[ lastItem ].lon;
+    if ( reports.length > 0 ) {
+        const lastItem = reports.length - 1;
+        lat = reports[ lastItem ].lat;
+        lon = reports[ lastItem ].lon;
         markers = mapMarkers();
     }
 
@@ -80,7 +81,7 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
                 <MapView
                     provider={PROVIDER_GOOGLE}
                     style={styles.map}
-                    region={{
+                    initialRegion={{
                         latitude: parseFloat( lat ),
                         longitude: parseFloat( lon ),
                         latitudeDelta: 9.5,

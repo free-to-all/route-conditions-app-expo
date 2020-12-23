@@ -121,8 +121,8 @@ export function refreshCurrentPosition(){
         //TODO: handle failure
 
         const location = await Location.getCurrentPositionAsync( {} );
-        //TODO: repeat this task forever
         dispatch(createCurrentLocationDoneAction(location))
+        return setTimeout(() => refreshCurrentPosition()(dispatch), 10000);
     }
 }
 
