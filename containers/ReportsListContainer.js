@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import {getReports} from '../actions/routeActions';
+import {getReports, refreshCurrentPosition} from '../actions/routeActions';
 import { ReportsList } from "../components/ReportsList";
 
 
@@ -12,6 +12,7 @@ export function ReportsListContainer() {
             reports: state.map.reports,
             loading: state.map.loading,
             errorMessage: state.map.errorMessage,
+            currentLocation: state.map.currentLocation,
             authToken: state.user.authToken,
         };
     });
@@ -20,7 +21,8 @@ export function ReportsListContainer() {
 
     const boundActionProps = useMemo(() => bindActionCreators(
         {
-            onRefreshReports: (authToken) => getReports(authToken)
+            onRefreshReports: (authToken) => getReports(authToken),
+            onRefreshCurrentPosition: () => refreshCurrentPosition(),
         },
         dispatch
     ), [dispatch]);

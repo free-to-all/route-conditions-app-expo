@@ -1,6 +1,8 @@
 // @flow
 
 import {Dispatch} from 'redux';
+import * as Location from "expo-location";
+import {LocationObject} from "expo-location";
 
 const superagent = require( 'superagent' );
 
@@ -11,6 +13,10 @@ const GET_REPORTS_REJECTED = 'GET_REPORTS_REJECTED';
 const AUTHENTICATE_USER_REQUEST_ACTION = 'AUTHENTICATE_USER_REQUEST_ACTION';
 const AUTHENTICATE_USER_DONE_ACTION = 'AUTHENTICATE_USER_DONE_ACTION';
 const AUTHENTICATE_USER_FAIL_ACTION = 'AUTHENTICATE_USER_FAIL_ACTION';
+
+const CURRENT_LOCATION_REQUEST_ACTION = 'CURRENT_LOCATION_REQUEST_ACTION';
+const CURRENT_LOCATION_DONE_ACTION = 'CURRENT_LOCATION_DONE_ACTION';
+const CURRENT_LOCATION_FAIL_ACTION = 'CURRENT_LOCATION_FAIL_ACTION';
 
 export function isFetchData ( action ) {
     return action.type === GET_REPORTS;
@@ -53,7 +59,7 @@ export function fetchDataRejected ( error ) {
     };
 }
 
-//Define your action creators that will be responsible for asynchronouse operatiosn 
+//Define your action creators that will be responsible for async operations
 export const getReports = (authToken) => {
     return ( dispatch: Dispatch ) => {
         //Dispatch the fetchData action creator before retrieving to set our loading state to true.
@@ -69,6 +75,54 @@ export const getReports = (authToken) => {
             //We will set our loading state when fetching data is successful.
             if ( res ) dispatch( fetchDataFulfilled( res.body ) );
         } )
+    }
+}
+
+export function isGetCurrentLocationRequestAction ( action ) {
+    return action.type === CURRENT_LOCATION_REQUEST_ACTION;
+}
+
+export function createCurrentLocationRequestAction () {
+    return {
+        type: CURRENT_LOCATION_REQUEST_ACTION,
+    };
+}
+
+export function isCurrentLocationDoneAction ( action : {type: CURRENT_LOCATION_DONE_ACTION} ) {
+    return action.type === CURRENT_LOCATION_DONE_ACTION;
+}
+
+export function createCurrentLocationDoneAction ( location : LocationObject ) {
+    return {
+        type: CURRENT_LOCATION_DONE_ACTION,
+        location: location,
+    };
+}
+
+export function isCurrentLocationFailedAction ( action ) {
+    return action.type === GET_REPORTS_REJECTED;
+}
+
+export function createCurrentLocationFailedAction ( error ) {
+    return {
+        type: GET_REPORTS_REJECTED,
+        payload: error,
+    };
+}
+
+export function refreshCurrentPosition(){
+    return async ( dispatch: Dispatch ) => {
+        dispatch(createCurrentLocationRequestAction());
+
+        let {status} = await Location.requestPermissionsAsync();
+        if ( status !== 'granted' ) {
+            return;
+        }
+        //TODO: handle failure
+
+        const location = await Location.getCurrentPositionAsync( {} );
+        //TODO: repeat this task forever
+        dispatch(createCurrentLocationDoneAction(location))
     }
 }
 
