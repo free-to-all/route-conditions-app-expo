@@ -26,11 +26,11 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
 
     useEffect( () => {
         const timeoutId = props.onRefreshCurrentPosition();
-        return () => clearTimeout(timeoutId);
+        return () => clearTimeout( timeoutId );
 
     }, [props.onRefreshCurrentPosition] );
 
-    const {reports, loading, errorMessage} = props;
+    const {reports, loading, errorMessage, currentLocation} = props;
 
     const currentLocationMarker = ( loc ) => {
         return (
@@ -47,7 +47,7 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
     const mapMarkers = () => {
 
         if ( reports.length === 0 ) {
-            return;
+            return [];
         }
 
         return reports.map( ( report ) => <Marker
@@ -60,19 +60,23 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
     }
 
 
-    let lat = 47.6062;
-    let lon = -122.3321;
     let markers = [];
+
+    let region = {latitude: 47.6062, longitude: -122.3321, latitudeDelta: 9.5, longitudeDelta: 9.5};
 
     if ( reports.length > 0 ) {
         const lastItem = reports.length - 1;
-        lat = reports[ lastItem ].lat;
-        lon = reports[ lastItem ].lon;
+        region.latitude = parseFloat( reports[ lastItem ].lat );
+        region.longitude = parseFloat( reports[ lastItem ].lon );
         markers = mapMarkers();
     }
 
-    if ( props.currentLocation ) {
-        markers.push( currentLocationMarker( props.currentLocation ) );
+    if ( currentLocation ) {
+        markers.push( currentLocationMarker( currentLocation ) );
+        region.latitude = currentLocation.coords.latitude;
+        region.longitude = currentLocation.coords.longitude;
+        region.latitudeDelta = 0.06;
+        region.longitudeDelta = 0.06;
     }
 
     if ( !loading ) {
@@ -81,18 +85,10 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
                 <MapView
                     provider={PROVIDER_GOOGLE}
                     style={styles.map}
-                    initialRegion={{
-                        latitude: parseFloat( lat ),
-                        longitude: parseFloat( lon ),
-                        latitudeDelta: 9.5,
-                        longitudeDelta: 9.5,
-                    }}
+                    initialRegion={region}
                 >
                     {markers}
                 </MapView>
-                {/* <View style={styles.container}>
-          {reports.length ? reports.map((report, i) => <Text key={i}>{report.message}</Text>) : <Text>No Reports</Text>}
-        </View> */}
             </>
         );
     } else {
@@ -102,14 +98,9 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
             </View>
         )
     }
-    // return (
-    //   <View style={styles.container}>
-    //     <Text>{reports.map((report, i) => ) ? "hey" : "yo"}</Text>
-    //   </View>
-    // );
 }
 
-//Define your styles by using StyleSHeet from react-native to cerate a css abstraction
+//Define your styles by using StyleSheet from react-native to create a css abstraction
 const styles = StyleSheet.create( {
     container: {
         flex: 1,
