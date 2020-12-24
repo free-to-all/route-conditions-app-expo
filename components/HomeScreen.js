@@ -3,20 +3,15 @@ import {ReportsListContainer} from "../containers/ReportsListContainer";
 import React from "react";
 import {Colors} from "react-native/Libraries/NewAppScreen";
 
-export function HomeScreen() {
+export function HomeScreen () {
     return (
-        <>
-            <StatusBar barStyle="dark-content" />
-            <SafeAreaView>
-                <View style={styles.body}>
-                    <ReportsListContainer />
-                </View>
-            </SafeAreaView>
-        </>
+        <SafeAreaView style={styles.body}>
+            <ReportsListContainer/>
+        </SafeAreaView>
     );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create( {
     scrollView: {
         backgroundColor: Colors.lighter,
     },
@@ -26,10 +21,9 @@ const styles = StyleSheet.create({
     },
     body: {
         backgroundColor: Colors.white,
-        height: 400,
-        width: 400,
         justifyContent: 'flex-end',
         alignItems: 'center',
+        flex: 1,
     },
     sectionContainer: {
         marginTop: 32,
@@ -59,4 +53,4 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
 
-});
+} );

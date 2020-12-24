@@ -30,7 +30,8 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
 
     }, [props.onRefreshCurrentPosition] );
 
-    const {reports, loading, errorMessage, currentLocation} = props;
+    //TODO: user errorMesage
+    const {reports, loading, currentLocation} = props;
 
     const currentLocationMarker = ( loc ) => {
         return (
@@ -103,27 +104,12 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
 
 //Define your styles by using StyleSheet from react-native to create a css abstraction
 const styles = StyleSheet.create( {
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
     map: {
         ...StyleSheet.absoluteFillObject,
-    }, mapContainer: {
+    },
+    mapContainer: {
         ...StyleSheet.absoluteFillObject,
-        height: 400,
+        height: 700,
         width: 400,
         justifyContent: 'flex-end',
         alignItems: 'center',
