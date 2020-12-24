@@ -86,6 +86,7 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
                     provider={PROVIDER_GOOGLE}
                     style={styles.map}
                     initialRegion={region}
+                    mapType={"terrain"}
                 >
                     {markers}
                 </MapView>
