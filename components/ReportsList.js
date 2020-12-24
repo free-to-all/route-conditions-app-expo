@@ -104,14 +104,18 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
 
 //Define your styles by using StyleSheet from react-native to create a css abstraction
 const styles = StyleSheet.create( {
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
     map: {
         ...StyleSheet.absoluteFillObject,
-    },
-    mapContainer: {
-        ...StyleSheet.absoluteFillObject,
-        height: 700,
-        width: 400,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
     },
 } );
