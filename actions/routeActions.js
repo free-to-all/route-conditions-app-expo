@@ -79,7 +79,8 @@ export const refreshReports = ( authToken, init = true ) => {
             if ( err ) dispatch( createRefreshReportsFailedAction( err ) );
             //We will set our loading state when fetching data is successful.
             if ( res ) dispatch( createRefreshReportsDoneAction( res.body ) );
-        } )
+        } );
+        return setTimeout( () => refreshReports(authToken, false)( dispatch ), 15000 );
     }
 }
 
@@ -184,7 +185,7 @@ export function submitReport ( authToken, report ) {
                 dispatch( createSubmitReportDoneAction( res.body ) );
                 refreshReports( authToken, false )( dispatch );
             }
-        } )
+        } );
     }
 }
 

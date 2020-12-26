@@ -25,15 +25,19 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
     const {reports, loading, currentLocation, authToken} = props;
 
     useEffect( () => {
-            props.refreshReports( authToken );
+            const timeoutId = props.refreshReports( authToken );
+            //TODO: need to clear timeout properly by storing the latest timoutId, not just the first one
+            return () => clearTimeout( timeoutId );
         }, [props.refreshReports]
     );
 
     useEffect( () => {
-        const timeoutId = props.refreshCurrentPosition();
-        return () => clearTimeout( timeoutId );
+            const timeoutId = props.refreshCurrentPosition();
+            //TODO: need to clear timeout properly by storing the latest timoutId, not just the first one
+            return () => clearTimeout( timeoutId );
 
-    }, [props.refreshCurrentPosition] );
+        }, [props.refreshCurrentPosition]
+    );
 
 
     const currentLocationMarker = ( loc ) => {
