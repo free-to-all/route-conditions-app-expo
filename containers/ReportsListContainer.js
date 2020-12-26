@@ -21,8 +21,8 @@ export function ReportsListContainer() {
 
     const boundActionProps = useMemo(() => bindActionCreators(
         {
-            onRefreshReports: (authToken) => refreshReports(authToken),
-            onRefreshCurrentPosition: () => refreshCurrentPosition(),
+            refreshReports: (authToken) => refreshReports(authToken),
+            refreshCurrentPosition: () => refreshCurrentPosition(),
             submitReport: (report) => submitReport(stateProps.authToken, report),
         },
         dispatch

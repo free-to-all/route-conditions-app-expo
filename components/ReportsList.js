@@ -14,8 +14,8 @@ export type ReportsListProps = {
     loading: boolean;
     authToken: string;
     errorMessage: string;
-    onRefreshReports: () => void;
-    onRefreshCurrentPosition: () => void;
+    refreshReports: () => void;
+    refreshCurrentPosition: () => void;
     submitReport: () => void;
 }
 
@@ -25,15 +25,15 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
     const {reports, loading, currentLocation, authToken} = props;
 
     useEffect( () => {
-            props.onRefreshReports( authToken );
-        }, [props.onRefreshReports]
+            props.refreshReports( authToken );
+        }, [props.refreshReports]
     );
 
     useEffect( () => {
-        const timeoutId = props.onRefreshCurrentPosition();
+        const timeoutId = props.refreshCurrentPosition();
         return () => clearTimeout( timeoutId );
 
-    }, [props.onRefreshCurrentPosition] );
+    }, [props.refreshCurrentPosition] );
 
 
     const currentLocationMarker = ( loc ) => {
