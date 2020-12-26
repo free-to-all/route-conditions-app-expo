@@ -1,5 +1,4 @@
 // @flow
-//import React and PureComponent to have the ability to have a shallow comparison of props and state
 import React from 'react';
 
 import {Nav} from "../components/Nav";

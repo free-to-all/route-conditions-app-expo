@@ -1,4 +1,4 @@
-import {SafeAreaView, StatusBar, StyleSheet, View} from "react-native";
+import {SafeAreaView, StyleSheet} from "react-native";
 import {ReportsListContainer} from "../containers/ReportsListContainer";
 import React from "react";
 import {Colors} from "react-native/Libraries/NewAppScreen";

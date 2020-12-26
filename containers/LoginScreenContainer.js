@@ -3,7 +3,7 @@
 import React, {useMemo} from 'react';
 import {LoginScreen} from "../components/LoginScreen";
 import {useDispatch, useSelector} from "react-redux";
-import {bindActionCreators, Dispatch} from "redux";
+import {bindActionCreators} from "redux";
 import {authenticateUser} from "../actions/routeActions";
 
 

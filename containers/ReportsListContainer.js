@@ -1,9 +1,9 @@
 // @flow
-import React, { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { bindActionCreators } from "redux";
-import {refreshReports, refreshCurrentPosition, submitReport} from '../actions/routeActions';
-import { ReportsList } from "../components/ReportsList";
+import React, {useMemo} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {bindActionCreators} from "redux";
+import {refreshCurrentPosition, refreshReports, submitReport} from '../actions/routeActions';
+import {ReportsList} from "../components/ReportsList";
 
 
 export function ReportsListContainer() {
