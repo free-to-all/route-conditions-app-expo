@@ -18,6 +18,11 @@ const CURRENT_LOCATION_REQUEST_ACTION = 'CURRENT_LOCATION_REQUEST_ACTION';
 const CURRENT_LOCATION_DONE_ACTION = 'CURRENT_LOCATION_DONE_ACTION';
 const CURRENT_LOCATION_FAIL_ACTION = 'CURRENT_LOCATION_FAIL_ACTION';
 
+const SUBMIT_REPORT_REQUEST_ACTION = 'SUBMIT_REPORT_REQUEST_ACTION';
+const SUBMIT_REPORT_DONE_ACTION = 'SUBMIT_REPORT_DONE_ACTION';
+const SUBMIT_REPORT_FAIL_ACTION = 'SUBMIT_REPORT_FAIL_ACTION';
+
+
 export function isFetchData ( action ) {
     return action.type === GET_REPORTS;
 }
@@ -60,7 +65,7 @@ export function fetchDataRejected ( error ) {
 }
 
 //Define your action creators that will be responsible for async operations
-export const getReports = (authToken) => {
+export const getReports = ( authToken ) => {
     return ( dispatch: Dispatch ) => {
         //Dispatch the fetchData action creator before retrieving to set our loading state to true.
         dispatch( fetchData( true ) );
@@ -78,7 +83,7 @@ export const getReports = (authToken) => {
     }
 }
 
-export function isGetCurrentLocationRequestAction ( action ) {
+export function isCurrentLocationRequestAction ( action ) {
     return action.type === CURRENT_LOCATION_REQUEST_ACTION;
 }
 
@@ -88,11 +93,11 @@ export function createCurrentLocationRequestAction () {
     };
 }
 
-export function isCurrentLocationDoneAction ( action : {type: CURRENT_LOCATION_DONE_ACTION} ) {
+export function isCurrentLocationDoneAction ( action: { type: CURRENT_LOCATION_DONE_ACTION } ) {
     return action.type === CURRENT_LOCATION_DONE_ACTION;
 }
 
-export function createCurrentLocationDoneAction ( location : LocationObject ) {
+export function createCurrentLocationDoneAction ( location: LocationObject ) {
     return {
         type: CURRENT_LOCATION_DONE_ACTION,
         location: location,
@@ -100,19 +105,19 @@ export function createCurrentLocationDoneAction ( location : LocationObject ) {
 }
 
 export function isCurrentLocationFailedAction ( action ) {
-    return action.type === GET_REPORTS_REJECTED;
+    return action.type === CURRENT_LOCATION_FAIL_ACTION;
 }
 
 export function createCurrentLocationFailedAction ( error ) {
     return {
-        type: GET_REPORTS_REJECTED,
+        type: CURRENT_LOCATION_FAIL_ACTION,
         payload: error,
     };
 }
 
-export function refreshCurrentPosition(){
+export function refreshCurrentPosition () {
     return async ( dispatch: Dispatch ) => {
-        dispatch(createCurrentLocationRequestAction());
+        dispatch( createCurrentLocationRequestAction() );
 
         let {status} = await Location.requestPermissionsAsync();
         if ( status !== 'granted' ) {
@@ -121,8 +126,65 @@ export function refreshCurrentPosition(){
         //TODO: handle failure
 
         const location = await Location.getCurrentPositionAsync( {} );
-        dispatch(createCurrentLocationDoneAction(location))
-        return setTimeout(() => refreshCurrentPosition()(dispatch), 10000);
+        dispatch( createCurrentLocationDoneAction( location ) )
+        return setTimeout( () => refreshCurrentPosition()( dispatch ), 10000 );
+    }
+}
+
+export function isSubmitReportRequestAction ( action ) {
+    return action.type === SUBMIT_REPORT_REQUEST_ACTION;
+}
+
+export function createSubmitReportRequestAction () {
+    return {
+        type: SUBMIT_REPORT_REQUEST_ACTION,
+    };
+}
+
+export function isSubmitReportDoneAction ( action: { type: SUBMIT_REPORT_DONE_ACTION } ) {
+    return action.type === SUBMIT_REPORT_DONE_ACTION;
+}
+
+export function createSubmitReportDoneAction ( location: LocationObject ) {
+    return {
+        type: SUBMIT_REPORT_DONE_ACTION,
+        location: location,
+    };
+}
+
+export function isSubmitReportFailedAction ( action ) {
+    return action.type === SUBMIT_REPORT_FAIL_ACTION;
+}
+
+export function createSubmitReportFailedAction ( error ) {
+    return {
+        type: SUBMIT_REPORT_FAIL_ACTION,
+        payload: error,
+    };
+}
+
+export function submitReport ( authToken, report ) {
+    return async ( dispatch: Dispatch ) => {
+        dispatch( createSubmitReportRequestAction() );
+
+        //TODO: handle failure
+        //TODO: on Success display message to user
+
+        superagent.post( 'http://192.168.1.20:3000/reports' )
+            .send({authToken, report})
+            .set( {
+                "Authorization": authToken,
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            } ).end( ( err, res ) => {
+            //if there is an error use our fetchDataReject
+            if ( err ) dispatch( createSubmitReportFailedAction( err ) );
+            //We will set our loading state when fetching data is successful.
+            if ( res ) {
+                dispatch( createSubmitReportDoneAction( res.body ) );
+                getReports( authToken )( dispatch );
+            }
+        } )
     }
 }
 

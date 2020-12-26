@@ -6,6 +6,7 @@ import type {Report} from '../redux/store';
 
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {LocationObject} from 'expo-location';
+import {MakeReport} from "./MakeReport";
 
 export type ReportsListProps = {
     reports: Report[];
@@ -15,12 +16,16 @@ export type ReportsListProps = {
     errorMessage: string;
     onRefreshReports: () => void;
     onRefreshCurrentPosition: () => void;
+    submitReport: () => void;
 }
 
 export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: ReportsListProps ) => {
 
+    //TODO: user errorMesage
+    const {reports, loading, currentLocation, authToken} = props;
+
     useEffect( () => {
-            props.onRefreshReports( props.authToken );
+            props.onRefreshReports( authToken );
         }, [props.onRefreshReports]
     );
 
@@ -30,8 +35,6 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
 
     }, [props.onRefreshCurrentPosition] );
 
-    //TODO: user errorMesage
-    const {reports, loading, currentLocation} = props;
 
     const currentLocationMarker = ( loc ) => {
         return (
@@ -82,7 +85,7 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
 
     if ( !loading ) {
         return (
-            <>
+            <View style={styles.container}>
                 <MapView
                     provider={PROVIDER_GOOGLE}
                     style={styles.map}
@@ -91,7 +94,12 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
                 >
                     {markers}
                 </MapView>
-            </>
+                <MakeReport
+                    submitReport={props.submitReport}
+                    currentLocation={currentLocation}
+                    style={styles.buttons}
+                />
+            </View>
         );
     } else {
         return (
@@ -107,7 +115,6 @@ const styles = StyleSheet.create( {
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F5FCFF',
     },
     welcome: {
@@ -118,4 +125,8 @@ const styles = StyleSheet.create( {
     map: {
         ...StyleSheet.absoluteFillObject,
     },
+    buttons: {
+        marginTop: 'auto',
+    },
+
 } );

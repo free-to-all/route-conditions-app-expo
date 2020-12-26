@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import {getReports, refreshCurrentPosition} from '../actions/routeActions';
+import {getReports, refreshCurrentPosition, submitReport} from '../actions/routeActions';
 import { ReportsList } from "../components/ReportsList";
 
 
@@ -23,6 +23,7 @@ export function ReportsListContainer() {
         {
             onRefreshReports: (authToken) => getReports(authToken),
             onRefreshCurrentPosition: () => refreshCurrentPosition(),
+            submitReport: (report) => submitReport(stateProps.authToken, report),
         },
         dispatch
     ), [dispatch]);
