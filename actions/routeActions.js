@@ -6,9 +6,9 @@ import {LocationObject} from "expo-location";
 
 const superagent = require( 'superagent' );
 
-const GET_REPORTS = 'GET_REPORTS';
-const GET_REPORTS_FULFILLED = 'GET_REPORTS_FULFILLED';
-const GET_REPORTS_REJECTED = 'GET_REPORTS_REJECTED';
+const REFRESH_REPORTS_REQUEST_ACTION = 'REFRESH_REPORTS_REQUEST_ACTION';
+const REFRESH_REPORTS_DONE_ACTION = 'REFRESH_REPORTS_DONE_ACTION';
+const REFRESH_REPORTS_FAILED_ACTION = 'REFRESH_REPORTS_FAILED_ACTION';
 
 const AUTHENTICATE_USER_REQUEST_ACTION = 'AUTHENTICATE_USER_REQUEST_ACTION';
 const AUTHENTICATE_USER_DONE_ACTION = 'AUTHENTICATE_USER_DONE_ACTION';
@@ -23,42 +23,42 @@ const SUBMIT_REPORT_DONE_ACTION = 'SUBMIT_REPORT_DONE_ACTION';
 const SUBMIT_REPORT_FAIL_ACTION = 'SUBMIT_REPORT_FAIL_ACTION';
 
 
-export function isFetchData ( action ) {
-    return action.type === GET_REPORTS;
+export function isRefreshReportsRequestAction ( action ) {
+    return action.type === REFRESH_REPORTS_REQUEST_ACTION;
 }
 
 //Define your action create that set your loading state.
-export function fetchData ( bool ) {
+export function createRefreshReportsRequestAction ( bool ) {
     //return a action type and a loading state indicating it is getting data. 
     return {
-        type: GET_REPORTS,
+        type: REFRESH_REPORTS_REQUEST_ACTION,
         payload: bool,
     };
 }
 
-export function isFetchDataFulfilled ( action ) {
-    return action.type === GET_REPORTS_FULFILLED;
+export function isRefreshReportsDoneAction ( action ) {
+    return action.type === REFRESH_REPORTS_DONE_ACTION;
 }
 
 //Define a action creator to set your loading state to false, and return the data when the promise is resolved
-export function fetchDataFulfilled ( data ) {
+export function createRefreshReportsDoneAction ( data ) {
     //Return a action type and a loading to false, and the data.
     return {
-        type: GET_REPORTS_FULFILLED,
+        type: REFRESH_REPORTS_DONE_ACTION,
         payload: data,
         loading: false,
     };
 }
 
-export function isFetchDataRejected ( action ) {
-    return action.type === GET_REPORTS_REJECTED;
+export function isRefreshReportsFailedAction ( action ) {
+    return action.type === REFRESH_REPORTS_FAILED_ACTION;
 }
 
 //Define a action creator that catches a error and sets an errorMessage
-export function fetchDataRejected ( error ) {
+export function createRefreshReportsFailedAction ( error ) {
     //Return a action type and a payload with a error
     return {
-        type: GET_REPORTS_REJECTED,
+        type: REFRESH_REPORTS_FAILED_ACTION,
         payload: error,
         loading: false,
     };
@@ -67,18 +67,18 @@ export function fetchDataRejected ( error ) {
 //Define your action creators that will be responsible for async operations
 export const getReports = ( authToken ) => {
     return ( dispatch: Dispatch ) => {
-        //Dispatch the fetchData action creator before retrieving to set our loading state to true.
-        dispatch( fetchData( true ) );
-        //Then do a get request the get the err, and response callback, if there's an error dispatch the fetchDataRejected.
+        //Dispatch the createRefreshReportsRequestAction action creator before retrieving to set our loading state to true.
+        dispatch( createRefreshReportsRequestAction( true ) );
+        //Then do a get request the get the err, and response callback, if there's an error dispatch the createRefreshReportsFailedAction.
         superagent.get( 'http://192.168.1.20:3000/reports' )
             .set( {
                 "Authorization": authToken,
                 "Accept": "application/json"
             } ).end( ( err, res ) => {
-            //if there is an error use our fetchDataReject
-            if ( err ) dispatch( fetchDataRejected( err ) );
+            //if there is an error use our refreshReportsReject
+            if ( err ) dispatch( createRefreshReportsFailedAction( err ) );
             //We will set our loading state when fetching data is successful.
-            if ( res ) dispatch( fetchDataFulfilled( res.body ) );
+            if ( res ) dispatch( createRefreshReportsDoneAction( res.body ) );
         } )
     }
 }
@@ -177,7 +177,7 @@ export function submitReport ( authToken, report ) {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             } ).end( ( err, res ) => {
-            //if there is an error use our fetchDataReject
+            //if there is an error use our refreshReportsReject
             if ( err ) dispatch( createSubmitReportFailedAction( err ) );
             //We will set our loading state when fetching data is successful.
             if ( res ) {

@@ -1,13 +1,13 @@
 import {
     isCurrentLocationDoneAction,
-    isFetchData,
-    isFetchDataFulfilled,
-    isFetchDataRejected
+    isRefreshReportsRequestAction,
+    isRefreshReportsDoneAction,
+    isRefreshReportsFailedAction
 } from '../../actions/routeActions';
 import {combineReducers} from "redux";
 
 export const reportsReducer = ( reports = [], action ) => {
-    if ( isFetchDataFulfilled( action ) ) {
+    if ( isRefreshReportsDoneAction( action ) ) {
         return action.payload;
     } else {
         return reports;
@@ -15,11 +15,11 @@ export const reportsReducer = ( reports = [], action ) => {
 }
 
 export const loadingReducer = ( loading = true, action ) => {
-    if ( isFetchData( action ) ) {
+    if ( isRefreshReportsRequestAction( action ) ) {
         return action.payload;
-    } else if ( isFetchDataFulfilled( action ) ) {
+    } else if ( isRefreshReportsDoneAction( action ) ) {
         return action.loading;
-    } else if ( isFetchDataRejected( action ) ) {
+    } else if ( isRefreshReportsFailedAction( action ) ) {
         return action.loading;
     } else {
         return loading;
@@ -27,7 +27,7 @@ export const loadingReducer = ( loading = true, action ) => {
 }
 
 export const errorReducer = ( errorMessage = '', action ) => {
-    if ( isFetchDataRejected( action ) ) {
+    if ( isRefreshReportsFailedAction( action ) ) {
         return action.payload;
     } else {
         return errorMessage;
