@@ -65,10 +65,10 @@ export function createRefreshReportsFailedAction ( error ) {
 }
 
 //Define your action creators that will be responsible for async operations
-export const getReports = ( authToken ) => {
+export const refreshReports = ( authToken, init = true ) => {
     return ( dispatch: Dispatch ) => {
         //Dispatch the createRefreshReportsRequestAction action creator before retrieving to set our loading state to true.
-        dispatch( createRefreshReportsRequestAction( true ) );
+        dispatch( createRefreshReportsRequestAction( init ) );
         //Then do a get request the get the err, and response callback, if there's an error dispatch the createRefreshReportsFailedAction.
         superagent.get( 'http://192.168.1.20:3000/reports' )
             .set( {
@@ -182,7 +182,7 @@ export function submitReport ( authToken, report ) {
             //We will set our loading state when fetching data is successful.
             if ( res ) {
                 dispatch( createSubmitReportDoneAction( res.body ) );
-                getReports( authToken )( dispatch );
+                refreshReports( authToken, false )( dispatch );
             }
         } )
     }

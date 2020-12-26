@@ -2,7 +2,7 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import {getReports, refreshCurrentPosition, submitReport} from '../actions/routeActions';
+import {refreshReports, refreshCurrentPosition, submitReport} from '../actions/routeActions';
 import { ReportsList } from "../components/ReportsList";
 
 
@@ -21,7 +21,7 @@ export function ReportsListContainer() {
 
     const boundActionProps = useMemo(() => bindActionCreators(
         {
-            onRefreshReports: (authToken) => getReports(authToken),
+            onRefreshReports: (authToken) => refreshReports(authToken),
             onRefreshCurrentPosition: () => refreshCurrentPosition(),
             submitReport: (report) => submitReport(stateProps.authToken, report),
         },
