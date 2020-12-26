@@ -21,7 +21,7 @@ export type ReportsListProps = {
 
 export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: ReportsListProps ) => {
 
-    //TODO: user errorMesage
+    //TODO: user errorMessage
     const {reports, loading, currentLocation, authToken} = props;
 
     useEffect( () => {
@@ -43,6 +43,8 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
                 coordinate={{latitude: loc.coords.latitude, longitude: loc.coords.longitude}}
                 title={"Your current Location"}
                 description={"Report Conditions here"}
+                pinColor={"purple"}
+                rotation={40}
             >
             </Marker>
         );
