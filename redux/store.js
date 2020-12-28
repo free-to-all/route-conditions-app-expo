@@ -6,12 +6,18 @@ import thunk from 'redux-thunk';
 import {routeConditionsReducer} from "./reducers/routeConditionsReducer";
 //import mapReducer from our mapReducer file
 
+export type User = {
+    name: string,
+}
 
 export type Report = {
     id: number,
     lat: number,
     lon: number,
     message: string,
+    user: User,
+    created_at: string
+
 }
 
 export const reportsStore = createStore(

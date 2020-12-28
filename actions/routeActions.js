@@ -75,7 +75,8 @@ export const refreshReports = ( authToken, init = true ) => {
                 "Authorization": authToken,
                 "Accept": "application/json"
             } ).end( ( err, res ) => {
-            //if there is an error use our refreshReportsReject
+            //TODO: handle bad response code. For example, should not trigger createRefreshReportsDoneAction, also
+            // reduce must not allow null payload to ruin everything
             if ( err ) dispatch( createRefreshReportsFailedAction( err ) );
             //We will set our loading state when fetching data is successful.
             if ( res ) dispatch( createRefreshReportsDoneAction( res.body ) );
