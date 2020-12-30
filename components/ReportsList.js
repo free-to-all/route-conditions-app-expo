@@ -60,11 +60,12 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
             return [];
         }
 
+        // TODO: What if report is not the right type? Create test, but also make sure to validate reports before they get here
         return reports.map( ( report ) => <Marker
             key={report.id}
             coordinate={{latitude: parseFloat( report.lat ), longitude: parseFloat( report.lon )}}
             title={report.message}
-            description={report.user.name + " Report on " + report.created_at}
+            description={new Date(Date.parse(report.created_at)).toLocaleString() + " -- by " + report.user.name }
         >
         </Marker> )
     }
