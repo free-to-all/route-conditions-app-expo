@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 const superagent = require( 'superagent' );
 
 export function indexReports(authToken, errorCallback, successCallback) {
@@ -20,6 +22,7 @@ export function indexReports(authToken, errorCallback, successCallback) {
 
 function transformReport(report) {
     const myReport = {...report}
-    myReport.created_at = new Date(Date.parse(report.created_at));
+    const date = new Date(report.created_at);
+    myReport.created_at = format(date, "MMM do, yyyy H:mma");
     return myReport;
 }
