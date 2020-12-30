@@ -28,11 +28,11 @@ export function isRefreshReportsRequestAction ( action ) {
 }
 
 //Define your action create that set your loading state.
-export function createRefreshReportsRequestAction ( bool ) {
+export function createRefreshReportsRequestAction ( loading ) {
     //return a action type and a loading state indicating it is getting data. 
     return {
         type: REFRESH_REPORTS_REQUEST_ACTION,
-        payload: bool,
+        loading: loading,
     };
 }
 
@@ -41,11 +41,11 @@ export function isRefreshReportsDoneAction ( action ) {
 }
 
 //Define a action creator to set your loading state to false, and return the data when the promise is resolved
-export function createRefreshReportsDoneAction ( data ) {
+export function createRefreshReportsDoneAction ( reports ) {
     //Return a action type and a loading to false, and the data.
     return {
         type: REFRESH_REPORTS_DONE_ACTION,
-        payload: data,
+        reports: reports,
         loading: false,
     };
 }
@@ -59,7 +59,7 @@ export function createRefreshReportsFailedAction ( error ) {
     //Return a action type and a payload with a error
     return {
         type: REFRESH_REPORTS_FAILED_ACTION,
-        payload: error,
+        error: error,
         loading: false,
     };
 }

@@ -8,7 +8,7 @@ import {combineReducers} from "redux";
 
 export const reportsReducer = ( reports = [], action ) => {
     if ( isRefreshReportsDoneAction( action ) ) {
-        return action.payload;
+        return action.reports;
     } else {
         return reports;
     }
@@ -16,7 +16,7 @@ export const reportsReducer = ( reports = [], action ) => {
 
 export const loadingReducer = ( loading = true, action ) => {
     if ( isRefreshReportsRequestAction( action ) ) {
-        return action.payload;
+        return action.loading;
     } else if ( isRefreshReportsDoneAction( action ) ) {
         return action.loading;
     } else if ( isRefreshReportsFailedAction( action ) ) {
@@ -28,7 +28,7 @@ export const loadingReducer = ( loading = true, action ) => {
 
 export const errorReducer = ( errorMessage = '', action ) => {
     if ( isRefreshReportsFailedAction( action ) ) {
-        return action.payload;
+        return action.error;
     } else {
         return errorMessage;
     }
