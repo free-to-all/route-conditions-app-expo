@@ -3,6 +3,7 @@
 import {Dispatch} from 'redux';
 import * as Location from "expo-location";
 import {LocationObject} from "expo-location";
+import {indexReports} from "../models/ReportsClient";
 
 const superagent = require( 'superagent' );
 
@@ -67,20 +68,11 @@ export function createRefreshReportsFailedAction ( error ) {
 //Define your action creators that will be responsible for async operations
 export const refreshReports = ( authToken, init = true ) => {
     return ( dispatch: Dispatch ) => {
-        //Dispatch the createRefreshReportsRequestAction action creator before retrieving to set our loading state to true.
         dispatch( createRefreshReportsRequestAction( init ) );
-        //Then do a get request the get the err, and response callback, if there's an error dispatch the createRefreshReportsFailedAction.
-        superagent.get( 'http://192.168.1.20:3000/reports' )
-            .set( {
-                "Authorization": authToken,
-                "Accept": "application/json"
-            } ).end( ( err, res ) => {
-            //TODO: handle bad response code. For example, should not trigger createRefreshReportsDoneAction, also
-            // reduce must not allow null payload to ruin everything
-            if ( err ) dispatch( createRefreshReportsFailedAction( err ) );
-            //We will set our loading state when fetching data is successful.
-            if ( res ) dispatch( createRefreshReportsDoneAction( res.body ) );
-        } );
+        indexReports(authToken,
+            (err) =>  dispatch( createRefreshReportsFailedAction( err )),
+            (reports) => dispatch( createRefreshReportsDoneAction( reports )));
+
         return setTimeout( () => refreshReports(authToken, false)( dispatch ), 15000 );
     }
 }

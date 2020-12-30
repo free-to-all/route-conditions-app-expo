@@ -65,7 +65,7 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
             key={report.id}
             coordinate={{latitude: parseFloat( report.lat ), longitude: parseFloat( report.lon )}}
             title={report.message}
-            description={new Date(Date.parse(report.created_at)).toLocaleString() + " -- by " + report.user.name }
+            description={report.created_at.toLocaleString() + " -- by " + report.user.name }
         >
         </Marker> )
     }
