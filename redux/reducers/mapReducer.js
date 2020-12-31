@@ -3,7 +3,7 @@ import {
     isRefreshReportsRequestAction,
     isRefreshReportsDoneAction,
     isRefreshReportsFailedAction
-} from '../../actions/routeActions';
+} from '../actions/reportsActions';
 import {combineReducers} from "redux";
 
 export const reportsReducer = ( reports = [], action ) => {

@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import {isAuthenticateUserDoneAction} from "../../actions/routeActions";
+import {isAuthenticateUserDoneAction} from "../actions/userActions";
 
 export const authTokenReducer = ( authToken = '', action ) => {
     if (isAuthenticateUserDoneAction(action)) {

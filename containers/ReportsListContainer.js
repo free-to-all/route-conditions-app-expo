@@ -2,7 +2,7 @@
 import React, {useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {bindActionCreators} from "redux";
-import {refreshCurrentPosition, refreshReports, submitReport} from '../actions/routeActions';
+import {refreshCurrentPosition, refreshReports, submitReport} from '../redux/actions/reportsActions';
 import {ReportsList} from "../components/ReportsList";
 
 
