@@ -3,7 +3,7 @@
 import {Dispatch} from 'redux';
 import * as Location from "expo-location";
 import {LocationObject} from "expo-location";
-import {indexReports} from "../../models/ReportsClient";
+import {indexReports, submitReport as postReport} from "../../models/ReportsClient";
 
 const superagent = require( 'superagent' );
 
@@ -165,20 +165,16 @@ export function submitReport ( authToken, report ) {
         //TODO: handle failure
         //TODO: on Success display message to user
 
-        superagent.post( 'http://192.168.1.20:3000/reports' )
-            .send( {authToken, report} )
-            .set( {
-                "Authorization": authToken,
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            } ).end( ( err, res ) => {
-            //if there is an error use our refreshReportsReject
-            if ( err ) dispatch( createSubmitReportFailedAction( err ) );
-            //We will set our loading state when fetching data is successful.
-            if ( res ) {
-                dispatch( createSubmitReportDoneAction( res.body ) );
-                refreshReports( authToken, false )( dispatch );
-            }
-        } );
+        postReport( authToken, report,
+            ( error, report ) => {
+                if ( error ) {
+                    dispatch( createSubmitReportFailedAction( err ) );
+                } else if ( report ) {
+                    console.log(report);
+                    dispatch( createSubmitReportDoneAction( report ) );
+                    //TODO: This will produce additional refresh reports recursive stack, meaning refresh reports will be called 2 times instead of one on a timer
+                    refreshReports( authToken, false )( dispatch );
+                }
+            } );
     }
 }

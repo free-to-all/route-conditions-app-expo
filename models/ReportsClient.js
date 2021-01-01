@@ -19,8 +19,20 @@ export function indexReports ( authToken: string, callback: ( string, Report[] )
         } )
         .end( ( err, res ) => {
             //TODO: handle bad response code. For example, should not trigger createRefreshReportsDoneAction, also
-            // reduce must not allow null payload to ruin everything
-            callback( err, res?.body.map( transformReport ) )
+            // reduce must not allow null payload to ruin everything, also what if response is not an array?
+            callback( err, res?.body?.map( transformReport ) )
+        } );
+}
+
+export function submitReport ( authToken: string, report: Report, callback: ( string, Report ) => void ) {
+    superagent.post( baseUrl + '/reports' )
+        .send( {authToken, report} )
+        .set( {
+            ...baseHeaders,
+            "Authorization": authToken,
+        } )
+        .end( ( err, res ) => {
+            callback( err, res?.body )
         } );
 }
 
