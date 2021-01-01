@@ -61,15 +61,20 @@ export function createRefreshReportsFailedAction ( error ) {
     };
 }
 
-//Define your action creators that will be responsible for async operations
+
+//TODO: use slices here too
 export const refreshReports = ( authToken, init = true ) => {
     return ( dispatch: Dispatch ) => {
         dispatch( createRefreshReportsRequestAction( init ) );
-        indexReports(authToken,
-            (err) =>  dispatch( createRefreshReportsFailedAction( err )),
-            (reports) => dispatch( createRefreshReportsDoneAction( reports )));
-
-        return setTimeout( () => refreshReports(authToken, false)( dispatch ), 15000 );
+        indexReports( authToken,
+            ( err, reports ) => {
+                if ( err ) {
+                    dispatch( createRefreshReportsFailedAction( err ) )
+                } else if ( reports ) {
+                    dispatch( createRefreshReportsDoneAction( reports ) );
+                }
+                return setTimeout( () => refreshReports( authToken, false )( dispatch ), 15000 );
+            } );
     }
 }
 
@@ -161,7 +166,7 @@ export function submitReport ( authToken, report ) {
         //TODO: on Success display message to user
 
         superagent.post( 'http://192.168.1.20:3000/reports' )
-            .send({authToken, report})
+            .send( {authToken, report} )
             .set( {
                 "Authorization": authToken,
                 "Content-Type": "application/json",
