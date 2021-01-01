@@ -4,7 +4,7 @@ import React, {useMemo} from 'react';
 import {LoginScreen} from "../components/LoginScreen";
 import {useDispatch, useSelector} from "react-redux";
 import {bindActionCreators} from "redux";
-import {authenticateUser} from "../redux/actions/userActions";
+import {authenticateUser} from "../redux/slices/userSlice";
 
 
 export function LoginScreenContainer () {
