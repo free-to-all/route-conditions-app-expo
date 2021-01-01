@@ -22,11 +22,13 @@ export function authenticateUser ( email: string, password: string ) {
     return ( dispatch: Dispatch ) => {
         dispatch( (userSlice.actions.userAuthenticating( email )) );
         doAuth( email, password,
-            ( error ) => {
-
-            },
-            ( authToken ) => {
-                dispatch( userSlice.actions.userAuthenticated( authToken ) );
+            ( error, authToken ) => {
+                if ( authToken ) {
+                    dispatch( userSlice.actions.userAuthenticated( authToken ) );
+                } else if (error) {
+                    //TODO: What if auth fails? show error to user.
+                    console.log("USER AUTH FAILED!")
+                }
             }
         )
     }

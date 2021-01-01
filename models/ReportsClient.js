@@ -27,15 +27,11 @@ export function indexReports ( authToken:string, errorCallback, successCallback 
 }
 
 //TODO: use command pattern here? instead of passing callbacks
-export function authenticateUser ( email: string, password: string, errorCallback, successCallback ) {
+export function authenticateUser ( email: string, password: string, callback:(string, string) => void ) {
     superagent.post( baseUrl + '/authenticate' )
         .send( {email: email, password: password} )
         .set( baseHeaders ).end( ( err, res ) => {
-        if ( err ) {
-            errorCallback( err );
-        } else if ( res ) {
-            successCallback( res.body.auth_token );
-        }
+            callback(err, res?.body.auth_token)
     } )
 }
 
