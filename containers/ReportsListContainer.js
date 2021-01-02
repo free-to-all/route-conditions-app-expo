@@ -2,10 +2,10 @@
 import React, {useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {bindActionCreators} from "redux";
-import {submitReport} from '../redux/actions/reportsActions';
 import {ReportsList} from "../components/ReportsList";
 import {refreshReports} from "../redux/slices/reportsSlice";
 import {refreshCurrentPosition} from "../redux/slices/currentLocationSlice";
+import {submitReport} from "../redux/slices/submitReportSlice";
 
 
 export function ReportsListContainer() {
