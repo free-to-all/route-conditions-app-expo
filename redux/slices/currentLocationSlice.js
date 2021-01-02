@@ -13,9 +13,6 @@ const currentLocationSlice = createSlice( {
         },
         currentLocationLoaded ( state, action ) {
             console.log("CURRENT LOCATION LOADED");
-            console.log(action);
-            console.log("STATE");
-            console.log(state);
             state.location = action.payload;
         },
         currentLocationLoadingFailed ( state, action ) {
