@@ -18,21 +18,23 @@ const userSlice = createSlice( {
     }
 } );
 
+
+export const {userAuthenticated, userAuthenticating} = userSlice.actions;
+
 export function authenticateUser ( email: string, password: string ) {
     return ( dispatch: Dispatch ) => {
-        dispatch( (userSlice.actions.userAuthenticating( email )) );
+        dispatch( (userAuthenticating( email )) );
         doAuth( email, password,
             ( error, authToken ) => {
                 if ( authToken ) {
-                    dispatch( userSlice.actions.userAuthenticated( authToken ) );
-                } else if (error) {
+                    dispatch( userAuthenticated( authToken ) );
+                } else if ( error ) {
                     //TODO: What if auth fails? show error to user.
-                    console.log("USER AUTH FAILED!")
+                    console.log( "USER AUTH FAILED!" )
                 }
             }
         )
     }
 }
 
-export const {userAuthenticated, userAuthenticating} = userSlice.actions;
 export default userSlice.reducer;
