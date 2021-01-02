@@ -1,14 +1,7 @@
-import {isCurrentLocationDoneAction} from '../actions/reportsActions';
 import reportsReducer from '../slices/reportsSlice';
+import currentLocationReducer from '../slices/currentLocationSlice';
 import {combineReducers} from "redux";
 
-export const currentLocationReducer = ( currentLocation = null, action ) => {
-    if ( isCurrentLocationDoneAction( action) ) {
-        return action.location;
-    } else {
-        return currentLocation;
-    }
-}
 
 export const mapReducer = combineReducers( {
     reports: reportsReducer,

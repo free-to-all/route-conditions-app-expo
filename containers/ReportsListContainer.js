@@ -2,9 +2,10 @@
 import React, {useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {bindActionCreators} from "redux";
-import {refreshCurrentPosition, submitReport} from '../redux/actions/reportsActions';
+import {submitReport} from '../redux/actions/reportsActions';
 import {ReportsList} from "../components/ReportsList";
 import {refreshReports} from "../redux/slices/reportsSlice";
+import {refreshCurrentPosition} from "../redux/slices/currentLocationSlice";
 
 
 export function ReportsListContainer() {
@@ -13,7 +14,7 @@ export function ReportsListContainer() {
             reports: state.map.reports.reports,
             loading: state.map.reports.loading,
             errorMessage: state.map.reports.errorMessage,
-            currentLocation: state.map.currentLocation,
+            currentLocation: state.map.currentLocation.location,
             authToken: state.user.authToken,
         };
     });

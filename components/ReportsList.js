@@ -83,6 +83,7 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
     }
 
     if ( currentLocation ) {
+        console.log(currentLocation);
         markers.push( currentLocationMarker( currentLocation ) );
         region.latitude = currentLocation.coords.latitude;
         region.longitude = currentLocation.coords.longitude;
