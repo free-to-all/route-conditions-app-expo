@@ -3,13 +3,10 @@
 import {Dispatch} from 'redux';
 import * as Location from "expo-location";
 import {LocationObject} from "expo-location";
-import {indexReports, submitReport as postReport} from "../../models/ReportsClient";
+import {submitReport as postReport} from "../../models/ReportsClient";
+import type {Report} from "../store";
+import {refreshReports} from "../slices/reportsSlice";
 
-const superagent = require( 'superagent' );
-
-const REFRESH_REPORTS_REQUEST_ACTION = 'REFRESH_REPORTS_REQUEST_ACTION';
-const REFRESH_REPORTS_DONE_ACTION = 'REFRESH_REPORTS_DONE_ACTION';
-const REFRESH_REPORTS_FAILED_ACTION = 'REFRESH_REPORTS_FAILED_ACTION';
 
 const CURRENT_LOCATION_REQUEST_ACTION = 'CURRENT_LOCATION_REQUEST_ACTION';
 const CURRENT_LOCATION_DONE_ACTION = 'CURRENT_LOCATION_DONE_ACTION';
@@ -18,65 +15,6 @@ const CURRENT_LOCATION_FAIL_ACTION = 'CURRENT_LOCATION_FAIL_ACTION';
 const SUBMIT_REPORT_REQUEST_ACTION = 'SUBMIT_REPORT_REQUEST_ACTION';
 const SUBMIT_REPORT_DONE_ACTION = 'SUBMIT_REPORT_DONE_ACTION';
 const SUBMIT_REPORT_FAIL_ACTION = 'SUBMIT_REPORT_FAIL_ACTION';
-
-
-export function isRefreshReportsRequestAction ( action ) {
-    return action.type === REFRESH_REPORTS_REQUEST_ACTION;
-}
-
-//Define your action create that set your loading state.
-export function createRefreshReportsRequestAction ( loading ) {
-    //return a action type and a loading state indicating it is getting data. 
-    return {
-        type: REFRESH_REPORTS_REQUEST_ACTION,
-        loading: loading,
-    };
-}
-
-export function isRefreshReportsDoneAction ( action ) {
-    return action.type === REFRESH_REPORTS_DONE_ACTION;
-}
-
-//Define a action creator to set your loading state to false, and return the data when the promise is resolved
-export function createRefreshReportsDoneAction ( reports ) {
-    //Return a action type and a loading to false, and the data.
-    return {
-        type: REFRESH_REPORTS_DONE_ACTION,
-        reports: reports,
-        loading: false,
-    };
-}
-
-export function isRefreshReportsFailedAction ( action ) {
-    return action.type === REFRESH_REPORTS_FAILED_ACTION;
-}
-
-//Define a action creator that catches a error and sets an errorMessage
-export function createRefreshReportsFailedAction ( error ) {
-    //Return a action type and a payload with a error
-    return {
-        type: REFRESH_REPORTS_FAILED_ACTION,
-        error: error,
-        loading: false,
-    };
-}
-
-
-//TODO: use slices here too
-export const refreshReports = ( authToken, init = true ) => {
-    return ( dispatch: Dispatch ) => {
-        dispatch( createRefreshReportsRequestAction( init ) );
-        indexReports( authToken,
-            ( err, reports ) => {
-                if ( err ) {
-                    dispatch( createRefreshReportsFailedAction( err ) )
-                } else if ( reports ) {
-                    dispatch( createRefreshReportsDoneAction( reports ) );
-                }
-                return setTimeout( () => refreshReports( authToken, false )( dispatch ), 15000 );
-            } );
-    }
-}
 
 export function isCurrentLocationRequestAction ( action ) {
     return action.type === CURRENT_LOCATION_REQUEST_ACTION;
@@ -140,10 +78,10 @@ export function isSubmitReportDoneAction ( action: { type: SUBMIT_REPORT_DONE_AC
     return action.type === SUBMIT_REPORT_DONE_ACTION;
 }
 
-export function createSubmitReportDoneAction ( location: LocationObject ) {
+export function createSubmitReportDoneAction ( report: Report ) {
     return {
         type: SUBMIT_REPORT_DONE_ACTION,
-        location: location,
+        report: report,
     };
 }
 
@@ -170,7 +108,6 @@ export function submitReport ( authToken, report ) {
                 if ( error ) {
                     dispatch( createSubmitReportFailedAction( err ) );
                 } else if ( report ) {
-                    console.log(report);
                     dispatch( createSubmitReportDoneAction( report ) );
                     //TODO: This will produce additional refresh reports recursive stack, meaning refresh reports will be called 2 times instead of one on a timer
                     refreshReports( authToken, false )( dispatch );
