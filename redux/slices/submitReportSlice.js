@@ -11,7 +11,6 @@ const submitReportSlice = createSlice( {
         submittingReport ( state, action ) {
             console.log( "SUBMITTING NEW REPORT" );
             state.status = "submitting";
-            //TODO: Hide the button to submit report until current location loads
         },
         reportSubmitted ( state, action ) {
             console.log( "REPORT SUBMITTED" );
@@ -46,7 +45,6 @@ export function submitReport ( authToken, report ) {
                     dispatch( submittingReportFailed( err ) );
                 } else if ( report ) {
                     dispatch( reportSubmitted( report ) );
-                    //TODO: This will produce additional refresh reports recursive stack, meaning refresh reports will be called 2 times instead of one on a timer
                     refreshReports( authToken, false )( dispatch );
                 }
             } );
