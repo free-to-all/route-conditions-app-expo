@@ -1,8 +1,6 @@
 import {Dispatch} from "redux";
 import {authenticateUser as doAuth} from "../../models/ReportsClient";
 
-const superagent = require( 'superagent' );
-
 const {createSlice} = require( "@reduxjs/toolkit" );
 
 const userSlice = createSlice( {
