@@ -93,6 +93,8 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
         region.longitudeDelta = 0.06;
     }
 
+    //TODO: when when orientation changes how do you show rerender the map? Is this even needed? In other apps it is
+    // annoying when the map keeps flipping around
     if ( !loading ) {
         return (
             <View style={styles.container}>
