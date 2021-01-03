@@ -24,10 +24,13 @@ export const ReportsList: ( props: ReportsListProps ) => React$Node = ( props: R
     //TODO: user errorMessage
     const {reports, loading, currentLocation, authToken} = props;
 
+    const continuouslyRefreshReports = (loading = true) => {
+        props.refreshReports( authToken, loading);
+        setTimeout( () => continuouslyRefreshReports( false ), 15000 );
+    }
+
     useEffect( () => {
-            const timeoutId = props.refreshReports( authToken );
-            //TODO: need to clear timeout properly by storing the latest timoutId, not just the first one
-            return () => clearTimeout( timeoutId );
+        continuouslyRefreshReports();
         }, [props.refreshReports]
     );
 

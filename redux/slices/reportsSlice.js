@@ -8,9 +8,11 @@ const reportsSlice = createSlice( {
     initialState: {reports: [], loading: true, errorMessage: ''},
     reducers: {
         reportsLoading ( state, action ) {
+            console.log("REFRESHING REPORTS");
             state.loading = action.payload.loading;
         },
         reportsLoaded ( state, action ) {
+            console.log("REFRESHING REPORTS DONE");
             state.reports = action.payload.reports;
             state.loading = false;
         },
@@ -34,8 +36,6 @@ export function refreshReports ( authToken: string, loading = true ) {
                 } else if ( reports ) {
                     dispatch( reportsLoaded( {reports} ) );
                 }
-                return setTimeout( () => refreshReports( authToken, false )( dispatch ), 15000 );
             } );
     }
 }
-

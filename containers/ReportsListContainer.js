@@ -23,7 +23,7 @@ export function ReportsListContainer() {
 
     const boundActionProps = useMemo(() => bindActionCreators(
         {
-            refreshReports: (authToken) => refreshReports(authToken),
+            refreshReports: (authToken, loading) => refreshReports(authToken, loading),
             refreshCurrentPosition: () => refreshCurrentPosition(),
             submitReport: (report) => submitReport(stateProps.authToken, report),
         },
