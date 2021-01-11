@@ -3,7 +3,7 @@ import {ReportsListContainer} from "../containers/ReportsListContainer";
 import React from "react";
 import {Colors} from "react-native/Libraries/NewAppScreen";
 
-export function HomeScreen () {
+export function MapScreen () {
     return (
         <SafeAreaView style={styles.body}>
             <ReportsListContainer/>
