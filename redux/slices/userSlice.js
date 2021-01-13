@@ -1,23 +1,58 @@
 import {Dispatch} from "redux";
 import {authenticateUser as doAuth} from "../../models/ReportsClient";
+import * as SecureStore from 'expo-secure-store';
+import jwt_decode from "jwt-decode";
 
 const {createSlice} = require( "@reduxjs/toolkit" );
 
+const AUTH_TOKEN_KEY = 'authToken';
+
 const userSlice = createSlice( {
     name: 'user',
-    initialState: {authToken: ''},
+    initialState: {authToken: '', needsAuth: false},
     reducers: {
+        userAuthenticatingLocal ( state, action ) {
+            console.log( "RESTORING USER AUTH FROM LOCAL STORAGE" );
+        },
+        userAuthenticatedLocal ( state, action ) {
+            console.log( "RESTORED USER AUTH FROM LOCAL STORAGE" );
+            state.authToken = action.payload;
+        },
+        userAuthenticatingLocalFailed ( state, action ) {
+            console.log( "RESTORE USER AUTH FROM LOCAL STORAGE FAILED" );
+            state.authToken = '';
+            state.needsAuth = action.payload;
+        },
         userAuthenticating ( state, action ) {
+            console.log( "AUTHENTICATING USER" );
             //TODO: display "Authenticating..."
         },
         userAuthenticated ( state, action ) {
+            console.log( "AUTHENTICATED USER" );
             state.authToken = action.payload;
         }
     }
 } );
 
 
-export const {userAuthenticated, userAuthenticating} = userSlice.actions;
+export const {
+    userAuthenticatingLocal,
+    userAuthenticatedLocal,
+    userAuthenticatingLocalFailed,
+    userAuthenticated,
+    userAuthenticating
+} = userSlice.actions;
+
+function storeAuthToken ( authToken: string ) {
+    SecureStore.setItemAsync( AUTH_TOKEN_KEY, authToken )
+        .then( function () {
+            return true;
+        } )
+        .catch( function ( e ) {
+            //TODO: handle error better. At least log?
+            return false;
+        } )
+}
 
 export function authenticateUser ( email: string, password: string ) {
     return ( dispatch: Dispatch ) => {
@@ -25,13 +60,44 @@ export function authenticateUser ( email: string, password: string ) {
         doAuth( email, password,
             ( error, authToken ) => {
                 if ( authToken ) {
+                    storeAuthToken( authToken );
                     dispatch( userAuthenticated( authToken ) );
                 } else if ( error ) {
                     //TODO: What if auth fails? show error to user.
                     console.log( "USER AUTH FAILED!" )
+                    console.log( error );
                 }
             }
         )
+    }
+}
+
+function isStillValid ( authToken: string ) {
+    if ( authToken === null ) {
+        return false;
+    }
+
+    const decodedAuthToken = jwt_decode( authToken );
+    return (Date.now() >= decodedAuthToken.exp * 1000);
+}
+
+export function authenticateUsingLocalStorage () {
+    return ( dispatch: Dispatch ) => {
+        dispatch( (userAuthenticatingLocal()) );
+        SecureStore.getItemAsync( AUTH_TOKEN_KEY )
+            .then( ( authToken ) => {
+                if ( isStillValid( authToken ) ) {
+                    dispatch( userAuthenticatedLocal( authToken ) );
+                } else {
+                    console.log( "AUTH TOKEN EXPIRED!" )
+                    //TODO: else try to refresh token
+                    dispatch( (userAuthenticatingLocalFailed( true )) )
+                }
+            } )
+            .catch( ( e ) => {
+                console.log( "FETCHING AUTH TOKEN FROM LOCAL STORAGE FAILED" );
+                console.log( e.message );
+            } );
     }
 }
 

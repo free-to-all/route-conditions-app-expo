@@ -4,7 +4,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
 import {LoginScreenContainer} from "../containers/LoginScreenContainer";
 import {MapScreen} from "./MapScreen";
-import {SplashScreen} from "./SplashScreen";
+import {SplashScreenContainer} from "../containers/SplashScreenContainer";
 
 const Stack = createStackNavigator();
 
@@ -16,7 +16,7 @@ export function Nav ( props ) {
             }}>
                 {props.userToken === '' ? (
                     <>
-                        <Stack.Screen name="SplashScreen" component={SplashScreen}/>
+                        <Stack.Screen name="SplashScreen" component={SplashScreenContainer}/>
                         <Stack.Screen name="LoginScreen" component={LoginScreenContainer}/>
                     </>
                 ) : (

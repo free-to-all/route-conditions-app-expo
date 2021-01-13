@@ -1,17 +1,10 @@
 // @flow
-import React, {useEffect} from 'react';
+import React from 'react';
 
-import {Button, KeyboardAvoidingView, StyleSheet, Text, View,} from 'react-native';
-
-
+import {StyleSheet, Text, View,} from 'react-native';
 
 
 export function SplashScreen ( props ) {
-
-    useEffect( () => {
-        setTimeout(()=> { props.navigation.navigate('LoginScreen')}, 1000)
-    }, [props.navigation]);
-
     const splashText = "RouteConditions App is loading...";
 
     return (
