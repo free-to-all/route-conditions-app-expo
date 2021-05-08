@@ -16,6 +16,8 @@ export function SplashScreenContainer(props) {
         };
     });
 
+    //TODO: This should live in the same place where the other piece of logic for determining behavior after splash
+    //screen lives. That is in Nav component
     if (stateProps.needsAuth) {
         props.navigation.navigate('LoginScreen')
     }
